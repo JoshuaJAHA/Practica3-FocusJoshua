@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
-    <color name="color_primary">#222832</color>
-    <color name="color_secondary">#5F686A</color>
-    <color name="color_border">#32475E</color>
-    <color name="color_border_accent">#485E93</color>
+    <color name="color_primary">#F20574</color>
+
+    <color name="color_secondary">#0533F2</color>
+
+    <color name="color_border">#555555</color>
+
+    <color name="color_border_accent">#F20574</color>
 </resources>
