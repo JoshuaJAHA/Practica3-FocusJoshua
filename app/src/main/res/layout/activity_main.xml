@@ -5,6 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background_tvgirl"
     android:padding="24dp"
     tools:context=".MainActivity">
 
@@ -13,6 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Focus Joshua"
+        android:textColor="@color/white"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
@@ -42,6 +44,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:text="Modo: Enfoque"
+        android:textColor="@color/white"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -86,6 +89,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:text="25:00"
+        android:textColor="@color/white"
         android:textSize="72sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -108,6 +112,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="Sesiones completadas: 0/4"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sessionDotsContainer" />
@@ -138,6 +143,7 @@
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/white"
             android:text="Reset" />
 
         <com.google.android.material.button.MaterialButton
@@ -145,6 +151,7 @@
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/white"
             android:text="Skip" />
     </LinearLayout>
 
@@ -155,6 +162,7 @@
         android:layout_marginTop="32dp"
         android:text="Vamos bien"
         android:textAlignment="center"
+        android:textColor="@color/white"
         android:textSize="14sp"
         android:textStyle="italic"
         app:layout_constraintEnd_toEndOf="parent"

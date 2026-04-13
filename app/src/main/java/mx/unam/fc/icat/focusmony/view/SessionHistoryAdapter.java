@@ -96,15 +96,15 @@ public class SessionHistoryAdapter extends RecyclerView.Adapter<SessionHistoryAd
 
         // Lógica de retroalimentación visual basada en el estado de la sesión.
         if (session.isCompleted()) {
-            // Caso: Sesión terminada exitosamente.
+            // Caso: Sesión terminada exitosamente (Estilo TV Girl - Fondo Rosa, Letras Azules)
             holder.chipStatus.setText("✓ Completada");
-            holder.chipStatus.setChipBackgroundColorResource(R.color.white);
-            holder.chipStatus.setTextColor(RESOURCES.getColor(R.color.color_primary, null));
+            holder.chipStatus.setChipBackgroundColorResource(R.color.color_primary);
+            holder.chipStatus.setTextColor(RESOURCES.getColor(R.color.color_secondary, null));
         } else {
-            // Caso: Sesión interrumpida por el usuario o sistema.
+            // Caso: Sesión interrumpida (Estilo TV Girl invertido - Fondo Azul, Letras Rosas)
             holder.chipStatus.setText("✕ Interrumpida");
             holder.chipStatus.setChipBackgroundColorResource(R.color.color_secondary);
-            holder.chipStatus.setTextColor(RESOURCES.getColor(R.color.white, null));
+            holder.chipStatus.setTextColor(RESOURCES.getColor(R.color.color_primary, null));
         }
     }
 
