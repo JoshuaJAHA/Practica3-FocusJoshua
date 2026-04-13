@@ -57,20 +57,55 @@ public class SessionHistoryActivity extends AppCompatActivity {
 
         // TODO: Vincular Chips mediante findViewById y asignar IDs correspondientes.
 
-        sessionManager = new SessionManager(this);        // Puedes descomentar estas líneas para probar el diseño:
-        /*
-        sessionManager.addSession(new Session("Enfoque", "18 mar 2026", "15:00", 25, true));
-        sessionManager.addSession(new Session("Descanso", "18 mar 2026", "15:25", 5, true));
-        sessionManager.addSession(new Session("Enfoque", "18 mar 2026", "17:25", 3, false));
-        sessionManager.addSession(new Session("Descanso", "18 mar 2026", "18:30", 15, true));
-        */
+        sessionManager = new SessionManager(this);
     }
 
     /**
      * Configuración del sistema de filtrado por temporalidad.
      */
     private void setupFilterLogic() {
-        // TODO (Opcional): Implementar el funcionamiento del ChipGroup (filtrado).
+        // Encontramos el grupo de botones
+        com.google.android.material.chip.ChipGroup chipGroup = findViewById(R.id.chipGroupFilter);
+
+        // Listener para saber cuándo el usuario toca uno
+        chipGroup.setOnCheckedStateChangeListener((group, checkedIds) -> {
+            if (checkedIds.isEmpty()) return; //Si no hay nada seleccionado, no hace nada
+
+            int checkedId = checkedIds.get(0);
+
+            // toda la historia de tu base de datos SQLite
+            List<Session> allSessions = sessionManager.getHistory();
+            List<Session> filteredSessions = new java.util.ArrayList<>();
+
+            // sacamos la fecha del día de hoy en el mismo formato que guardamos (dd/MM/yyyy)
+            java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy", java.util.Locale.getDefault());
+            String today = sdf.format(new java.util.Date());
+
+            // filtramos dependiendo del botón que se tocó
+            if (checkedId == R.id.chipToday) {
+                // Si tocó Hoy, revisamos y solo guardamos las que coincidan con la fecha de hoy
+                for (Session s : allSessions) {
+                    if (s.getDate().equals(today)) {
+                        filteredSessions.add(s);
+                    }
+                }
+            } else {
+                // Si tocó Todas le mostramos todo el historial completo
+                filteredSessions.addAll(allSessions);
+            }
+
+            // Actualizamos el adaptador para que la lista visual cambie
+            adapter = new SessionHistoryAdapter(filteredSessions, getResources());
+            recyclerView.setAdapter(adapter);
+
+            // Actualizamos el texto que dice "X sesiones"
+            int total = filteredSessions.size();
+            tvResultCount.setText(total + (total == 1 ? " sesión" : " sesiones"));
+
+            // Si el filtro da 0 resultados, mostramos el letrero de "Aún no hay sesiones"
+            layoutEmpty.setVisibility(total == 0 ? View.VISIBLE : View.GONE);
+            recyclerView.setVisibility(total == 0 ? View.GONE : View.VISIBLE);
+        });
     }
 
     /**
