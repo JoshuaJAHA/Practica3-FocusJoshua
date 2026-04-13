@@ -17,17 +17,15 @@ import mx.unam.fc.icat.focusmony.model.Session;
 import mx.unam.fc.icat.focusmony.model.SessionManager;
 
 /**
- * Actividad que visualiza el historial cronológico de las sesiones de enfoque y descanso.
- * Se utiliza como práctica para el manejo de RecyclerView, adaptadores y filtrado de datos.
- * @author <a href="mailto:monmm@ciencias.unam.mx" > Mónica Miranda Mijangos </a> - @monmm
- * @version 1.2, mar 2026 (esqueleto para alumnos)
+ * @author <a href= joshuahurtado@ciencias.unam.mx>  Joshua Abel Hurtado Aponte - @JoshuaJAHA</a>
  */
+
 public class SessionHistoryActivity extends AppCompatActivity {
 
     // Componentes de la Interfaz de Usuario.
     private Toolbar toolbar;
     private TextView tvResultCount;
-    private ConstraintLayout layoutEmpty;
+    private View layoutEmpty;
     private RecyclerView recyclerView;
 
     // TODO: Declarar los componentes de filtrado (ChipGroup y Chips individuales).
@@ -84,7 +82,7 @@ public class SessionHistoryActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle(R.string.title_history);
+            getSupportActionBar().setTitle("Historial de Sesiones");
         }
     }
 
@@ -117,8 +115,8 @@ public class SessionHistoryActivity extends AppCompatActivity {
         recyclerView.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
 
         // TODO: Investigar cómo usar Plurals en strings.xml para manejar "1 sesión" vs "2 sesiones".
-        String countText = getString(R.string.session_count, (sessions != null ? sessions.size() : 0));
-        tvResultCount.setText(countText);
+        int total = sessions != null ? sessions.size() : 0;
+        tvResultCount.setText(total + (total == 1 ? " sesión" : " sesiones"));
     }
 
     @Override

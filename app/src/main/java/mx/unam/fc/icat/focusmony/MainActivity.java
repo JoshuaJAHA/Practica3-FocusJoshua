@@ -29,6 +29,7 @@ import java.util.Random; //frase
 // Base de Datos
 import mx.unam.fc.icat.focusmony.model.Session;
 import mx.unam.fc.icat.focusmony.model.SessionManager;
+import mx.unam.fc.icat.focusmony.view.SessionHistoryActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -63,6 +64,8 @@ public class MainActivity extends AppCompatActivity {
 
     //declaramos el Gestor de Sesiones de SQLite
     private SessionManager sessionManager;
+
+    private android.widget.ImageButton btnStats;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,6 +125,7 @@ public class MainActivity extends AppCompatActivity {
         btnReset = findViewById(R.id.btnReset);
         btnSkip = findViewById(R.id.btnSkip);
         tvMotivationalQuote = findViewById(R.id.tvMotivationalQuote);
+        btnStats = findViewById(R.id.btnStats);
     }
 
     private void setupClickListeners() {
@@ -136,6 +140,12 @@ public class MainActivity extends AppCompatActivity {
         //botones extra
         btnReset.setOnClickListener(v -> resetTimer());
         btnSkip.setOnClickListener(v -> skipToNextSession());
+
+        // Navegación a la pantalla de Historial
+        btnStats.setOnClickListener(v -> {
+            android.content.Intent intent = new android.content.Intent(MainActivity.this, SessionHistoryActivity.class);
+            startActivity(intent);
+        });
 
         //navegación por chips
         View.OnClickListener chipClickListener = v -> {
