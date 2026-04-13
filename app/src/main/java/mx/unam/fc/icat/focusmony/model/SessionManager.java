@@ -1,40 +1,91 @@
 package mx.unam.fc.icat.focusmony.model;
 
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Gestiona el ciclo de vida de las tareas sugeridas dentro de la aplicación.
- * Implementa las operaciones básicas de persistencia en memoria (CRUD).
- * @author <a href="mailto:monmm@ciencias.unam.mx" > Mónica Miranda Mijangos </a> - @monmm
- * @version 1.0, feb 2026
- */
-public class SessionManager {
-    private List<Session> sessionHistory;
+public class SessionManager extends SQLiteOpenHelper {
 
-    public SessionManager() {
-        this.sessionHistory = new ArrayList<>();
+    private static final String DATABASE_NAME = "FocusBuddy.db";
+    private static final int DATABASE_VERSION = 1;
+
+    public SessionManager(Context context) {
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-    /**
-     *
-     * @param session
-     */
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+        // Creamos la tabla usando las constantes del contrato
+        final String SQL_CREATE_ENTRIES =
+                "CREATE TABLE " + SessionContract.SessionEntry.TABLE_NAME + " (" +
+                        SessionContract.SessionEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                        SessionContract.SessionEntry.COLUMN_NAME_TYPE + " TEXT," +
+                        SessionContract.SessionEntry.COLUMN_NAME_DATE + " TEXT," +
+                        SessionContract.SessionEntry.COLUMN_NAME_START_TIME + " TEXT," +
+                        SessionContract.SessionEntry.COLUMN_NAME_DURATION + " INTEGER," +
+                        SessionContract.SessionEntry.COLUMN_NAME_COMPLETED + " INTEGER)";
+        db.execSQL(SQL_CREATE_ENTRIES);
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL("DROP TABLE IF EXISTS " + SessionContract.SessionEntry.TABLE_NAME);
+        onCreate(db);
+    }
+
+    // Operación Create (CRUD)
     public void addSession(Session session) {
         if (session != null) {
-            sessionHistory.add(0, session); // Insertamos al inicio para ver lo más reciente
+            SQLiteDatabase db = this.getWritableDatabase();
+            ContentValues values = new ContentValues();
+
+            values.put(SessionContract.SessionEntry.COLUMN_NAME_TYPE, session.getType());
+            values.put(SessionContract.SessionEntry.COLUMN_NAME_DATE, session.getDate());
+            values.put(SessionContract.SessionEntry.COLUMN_NAME_START_TIME, session.getStartTime());
+            values.put(SessionContract.SessionEntry.COLUMN_NAME_DURATION, session.getDuration());
+            // SQLite no guarda booleanos, usamos 1 para true y 0 para false
+            values.put(SessionContract.SessionEntry.COLUMN_NAME_COMPLETED, session.isCompleted() ? 1 : 0);
+
+            try {
+                db.insert(SessionContract.SessionEntry.TABLE_NAME, null, values);
+            } catch (Exception e) {
+                e.printStackTrace(); // Rúbrica: Implementación de bloques try-catch
+            } finally {
+                db.close();
+            }
         }
     }
 
-    /**
-     *
-     * @return
-     */
+    // Operación Read (CRUD)
     public List<Session> getHistory() {
-        return new ArrayList<>(sessionHistory);
-    }
+        List<Session> sessionList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
 
-    // TODO: completar operaciones CRUD.
-    //  + metodo para obtener las sesiones del dia de hoy.
-    //  + metodo para las sesiones de esta semana.
+        // Leemos todo ordenado por ID descendente (lo más nuevo primero)
+        String sortOrder = SessionContract.SessionEntry._ID + " DESC";
+
+        try (Cursor cursor = db.query(
+                SessionContract.SessionEntry.TABLE_NAME,
+                null, null, null, null, null, sortOrder)) {
+
+            while (cursor.moveToNext()) {
+                String type = cursor.getString(cursor.getColumnIndexOrThrow(SessionContract.SessionEntry.COLUMN_NAME_TYPE));
+                String date = cursor.getString(cursor.getColumnIndexOrThrow(SessionContract.SessionEntry.COLUMN_NAME_DATE));
+                String time = cursor.getString(cursor.getColumnIndexOrThrow(SessionContract.SessionEntry.COLUMN_NAME_START_TIME));
+                int duration = cursor.getInt(cursor.getColumnIndexOrThrow(SessionContract.SessionEntry.COLUMN_NAME_DURATION));
+                boolean completed = cursor.getInt(cursor.getColumnIndexOrThrow(SessionContract.SessionEntry.COLUMN_NAME_COMPLETED)) == 1;
+
+                sessionList.add(new Session(type, date, time, duration, completed));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return sessionList;
+    }
 }
