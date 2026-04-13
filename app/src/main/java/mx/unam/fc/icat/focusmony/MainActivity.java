@@ -1,4 +1,5 @@
 package mx.unam.fc.icat.focusmony;
+
 /**
  * @author <a href= joshuahurtado@ciencias.unam.mx>  Joshua Abel Hurtado Aponte - @JoshuaJAHA</a>
  */
@@ -23,7 +24,11 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
-import java.util.Random; //frase aleatoria
+import java.util.Random; //frase
+
+// Base de Datos
+import mx.unam.fc.icat.focusmony.model.Session;
+import mx.unam.fc.icat.focusmony.model.SessionManager;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -36,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private static final long REST_DURATION_MS    = 15 * 60 * 1000L;
     private static final int SESSIONS_BEFORE_REST = 4;
 
-    //arreglo de frases motivacionales
+    //frases motivacionales
     private final String[] frasesMotivacionales = {
             "Toma un respiro... te lo ganaste",
             "Desconecta un momento, tu cerebro lo necesita",
@@ -56,6 +61,9 @@ public class MainActivity extends AppCompatActivity {
     private long timeLeftMillis = FOCUS_DURATION_MS;
     private int focusSessionsCompleted = 0;
 
+    //declaramos el Gestor de Sesiones de SQLite
+    private SessionManager sessionManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +71,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         bindViews();
+
+        //inicializamos la conexión a la base de datos
+        sessionManager = new SessionManager(this);
 
         //recupera los datos si se gira la pantalla
         if (savedInstanceState != null) {
@@ -174,7 +185,8 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFinish() {
-                onSessionFinished();
+                //terminó de forma natural
+                onSessionFinished(true);
             }
         }.start();
     }
@@ -203,12 +215,16 @@ public class MainActivity extends AppCompatActivity {
     //cancelar el tiempo y forzar el fin, para saltar al siguiente
     private void skipToNextSession() {
         cancelTimer();
-        onSessionFinished();
+        //se forzó el final (interrumpida)
+        onSessionFinished(false);
     }
 
-
-    private void onSessionFinished() {
+    //modificamos el método para que reciba si fue exitosa o no
+    private void onSessionFinished(boolean isCompleted) {
         timerState = TimerState.IDLE;
+
+        //guardamos la sesión en SQLite ANTES de cambiar al siguiente modo
+        saveCurrentSession(isCompleted);
 
         if (currentMode == SessionMode.FOCUS) {
             focusSessionsCompleted++;
@@ -245,6 +261,34 @@ public class MainActivity extends AppCompatActivity {
         }
         resetModeTime();
         btnStartStop.setText("Comenzar");
+    }
+
+    // método que empaqueta y envía los datos a la BD
+    private void saveCurrentSession(boolean isCompleted) {
+        java.util.Calendar calendar = java.util.Calendar.getInstance();
+        java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat("dd/MM/yyyy", java.util.Locale.getDefault());
+        java.text.SimpleDateFormat timeFormat = new java.text.SimpleDateFormat("HH:mm", java.util.Locale.getDefault());
+
+        String date = dateFormat.format(calendar.getTime());
+        String startTime = timeFormat.format(calendar.getTime());
+
+        // Calculamos el nombre y los minutos según el modo que acaba de terminar
+        String type;
+        int duration;
+
+        if (currentMode == SessionMode.FOCUS) {
+            type = "Enfoque";
+            duration = (int) (FOCUS_DURATION_MS / 60000);
+        } else if (currentMode == SessionMode.BREAK) {
+            type = "Descanso Corto";
+            duration = (int) (BREAK_DURATION_MS / 60000);
+        } else {
+            type = "Descanso Largo";
+            duration = (int) (REST_DURATION_MS / 60000);
+        }
+
+        Session newSession = new Session(type, date, startTime, duration, isCompleted);
+        sessionManager.addSession(newSession);
     }
 
     //crear y agregar el puntito dinámicamente

@@ -38,7 +38,7 @@ public class SessionManager extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    // Operación Create (CRUD)
+    // Operación Create
     public void addSession(Session session) {
         if (session != null) {
             SQLiteDatabase db = this.getWritableDatabase();
@@ -48,25 +48,25 @@ public class SessionManager extends SQLiteOpenHelper {
             values.put(SessionContract.SessionEntry.COLUMN_NAME_DATE, session.getDate());
             values.put(SessionContract.SessionEntry.COLUMN_NAME_START_TIME, session.getStartTime());
             values.put(SessionContract.SessionEntry.COLUMN_NAME_DURATION, session.getDuration());
-            // SQLite no guarda booleanos, usamos 1 para true y 0 para false
+            //usamos 1 para true y 0 para false
             values.put(SessionContract.SessionEntry.COLUMN_NAME_COMPLETED, session.isCompleted() ? 1 : 0);
 
             try {
                 db.insert(SessionContract.SessionEntry.TABLE_NAME, null, values);
             } catch (Exception e) {
-                e.printStackTrace(); // Rúbrica: Implementación de bloques try-catch
+                e.printStackTrace(); //bloques try-catch
             } finally {
                 db.close();
             }
         }
     }
 
-    // Operación Read (CRUD)
+    // Operación Read
     public List<Session> getHistory() {
         List<Session> sessionList = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
 
-        // Leemos todo ordenado por ID descendente (lo más nuevo primero)
+        // Leemos todo ordenado por ID descendente
         String sortOrder = SessionContract.SessionEntry._ID + " DESC";
 
         try (Cursor cursor = db.query(
