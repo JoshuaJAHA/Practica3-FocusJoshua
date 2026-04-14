@@ -1,35 +1,23 @@
-### 1. Lógica de Negocio y Control de Sesiones
-La `MainActivity` gestiona el flujo de productividad basado en el método Pomodoro, implementando las siguientes reglas:
-* **Ciclo de Sesiones Dinámico:** Configuración de intervalos de 25 min (Enfoque) y 5 min (Descanso). Tras completar 4 sesiones de enfoque, el sistema activa automáticamente un descanso largo de 15 min.
-* **Gestión de Estados:**
-    * **Reset:** Detiene el temporizador activo y restablece el contador al tiempo inicial del modo actual.
-    * **Skip:** Permite al usuario saltar al siguiente estado del ciclo (Enfoque -> Descanso o viceversa) ignorando el tiempo restante.
-* **Optimización de Pantalla:** Implementación de modo inmersivo y configuración para mantener la pantalla encendida durante el conteo, evitando interrupciones en la visibilidad del temporizador.
+# Práctica 3: FocusBuddy (Técnica Pomodoro)
 
-### 2. Interfaz y Experiencia de Usuario (UI/UX)
-El diseño se basa en **Material Components** y las mejores prácticas de diseño de Android:
-* **Jerarquía Visual:** Uso de `ConstraintLayout` para una disposición eficiente de `ImageViews`, `TextViews` y `MaterialButtons`.
-* **Feedback de Estado:** El `Chip` del modo activo se resalta visualmente mediante un borde (*stroke*), facilitando la identificación del estado actual del ciclo mediante `ChipGroups`.
-* **Recursos y Activos:**
-    * Soporte multilingüe completo mediante archivos `values-es/strings.xml`.
-    * Identidad visual gestionada a través de `Image Assets` para el logo de la aplicación.
-* **Herramientas de Diseño:** Uso de atributos `tools` en el XML para previsualizar estados sin afectar el tiempo de ejecución.
+**Nombre:** Joshua Abel Hurtado Aponte  
+**No. de Cuenta:** 320176900
 
-### 3. Arquitectura de Datos y Persistencia (MVC)
-La aplicación utiliza el patrón **Modelo-Vista-Controlador** para desacoplar la interfaz de la lógica de almacenamiento:
+## Descripción general
+Esta es una app de productividad basada en Pomodoro. Me basé en el esqueleto base del laboratorio y le fui armando toda la lógica para que el cronómetro funcionara con sus ciclos
 
-* **Modelo:**
-    * **Entidad `Session`:** Clase POJO que encapsula los datos de cada intervalo (tipo, fecha, hora, duración y estado de completado).
-    * **SessionManager**: Clase encargada de administrar una lista dinámica en memoria RAM (ArrayList<Session>). Actúa como el controlador de datos de la aplicación, permitiendo agregar nuevas sesiones y recuperar el historial para su visualización inmediata. Nota: En esta rama, los datos son volátiles y se reinician al finalizar el proceso de la aplicación, sirviendo como base estructural para la futura implementación de persistencia.
-* **Controlador (`MainActivity`):** Vincula el código lógico con la interfaz, enviando los datos de cada sesión finalizada al `SessionManager` para su almacenamiento permanente.
-* **Vista del Historial:**
-    * **RecyclerView:** Implementación eficiente para mostrar el historial de sesiones.
-    * **`history_session_entry.xml`:** Definición personalizada para cada entrada de la lista.
-    * **Gestión de "Estado Vacío":** Interfaz dinámica que muestra una vista alternativa cuando el historial no contiene registros.
+Las tareas que hice fueron:
+- Separar el código usando la arquitectura MVC
+- Quitar absolutamente todo el hardcoding de los XML y de Java para meterle internacionalización (app en Inglés y Español)
+- Implementar una base de datos local con SQLite para guardar el historial de las sesiones 
+- Usar SharedPreferences para guardar el idioma y el tema (claro/oscuro)
+- Bloquear la pantalla en vertical desde el Manifest para que el reloj no falle si giras el celular
+- Darle un diseño propio (TV Girl) y hacer que el celular vibre al terminar
 
-### 4. Resumen de Componentes Técnicos
-* **Almacenamiento:** Mientras que en la rama `master` el historial de sesiones es gestionado de forma local y volátil en memoria RAM, la rama [`sqlite-persistence`](https://github.com/monmm/FocusLab/blob/feature/sqlite-persistence/README.md) escala el proyecto integrando una capa de persistencia definitiva mediante **SQLite nativo**, garantizando la integridad del historial de productividad del usuario a largo plazo.
-* **Arquitectura:** MVC con separación clara de responsabilidades.
-* **Configuración:** `SharedPreferences` para persistir preferencias de usuario (Tema e Idioma).
+## ¿Qué me costó más trabajo?
+La internacionalización y el cambio de idioma desde la app. Pasar los textos al strings.xml fue la parte fácil, pero hacer que al elegir Inglés en Preferencias TODA la app se recargara y guardara sin crashear, me costó. También me tomó un rato entender cómo configurar bien los Chips para que el filtrado del historial funcionara bien
 
-Esta estructura garantiza que **FocusLab** sea una aplicación profesional, escalable y capaz de mantener la integridad de los datos de productividad del usuario incluso tras el cierre de la aplicación.
+## Si hiciera una segunda versión (V2), ¿qué le agregaría?
+1. **Tiempos personalizados:** Que el usuario pueda decidir si quiere estudiar 45 minutos y descansar 10, en lugar de estar con los 25 fijos
+2. **Gráficas:** En lugar de solo ver la lista de sesiones, estaría bien una gráfica de barras para ver qué día de la semana fuiste más productivo
+3. **Alarmas sonoras:** En este momento vibra y saca un mensaje, pero estaría mejor que sonara una alarma o te dejara elegir tu propio tono para cuando acabe el tiempo
