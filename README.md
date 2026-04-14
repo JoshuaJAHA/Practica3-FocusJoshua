@@ -20,4 +20,4 @@ La internacionalización y el cambio de idioma desde la app. Pasar los textos al
 ## Si hiciera una segunda versión (V2), ¿qué le agregaría?
 1. **Tiempos personalizados:** Que el usuario pueda decidir si quiere estudiar 45 minutos y descansar 10, en lugar de estar con los 25 fijos
 2. **Gráficas:** En lugar de solo ver la lista de sesiones, estaría bien una gráfica de barras para ver qué día de la semana fuiste más productivo
-3. **Alarmas sonoras:** En este momento vibra y saca un mensaje, pero estaría mejor que sonara una alarma o te dejara elegir tu propio tono para cuando acabe el tiempo
+3. **Alarmas sonoras:** En este momento vibra y saca un mensaje, pero estaría mejor que sonara una alarma o te dejara elegir tu propio tono para cuando acabe el tiempo.
