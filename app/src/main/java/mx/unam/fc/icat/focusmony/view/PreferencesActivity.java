@@ -7,15 +7,13 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.preference.PreferenceManager; // Asegúrate de tener la dependencia
 
+import mx.unam.fc.icat.focusmony.MainActivity;
 import mx.unam.fc.icat.focusmony.R;
 
 /**
- * Actividad encargada de gestionar las preferencias del usuario.
- * Implementa un Listener para reaccionar a cambios en los ajustes (como el idioma).
- * TODO: Asegurarse de agregar la dependencia de AndroidX Preference en el build.gradle.
- * @author <a href="mailto:monmm@ciencias.unam.mx" > Mónica Miranda Mijangos </a> - @monmm
- * @version 1.2, mar 2026 (esqueleto para alumnos)
+ * @author <a href= joshuahurtado@ciencias.unam.mx>  Joshua Abel Hurtado Aponte - @JoshuaJAHA</a>
  */
+
 public class PreferencesActivity extends AppCompatActivity
         implements SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -78,10 +76,20 @@ public class PreferencesActivity extends AppCompatActivity
     }
 
     /**
-     * TODO: Implementar este método para cambiar la configuración del idioma.
+     * Implementación para cambiar la configuración del idioma
      */
     private void applyLanguage(String langCode) {
-        // Configurar la baseContext con el nuevo Locale.
+        java.util.Locale locale = new java.util.Locale(langCode);
+        java.util.Locale.setDefault(locale);
+        android.content.res.Resources resources = getResources();
+        android.content.res.Configuration config = resources.getConfiguration();
+        config.setLocale(locale);
+        resources.updateConfiguration(config, resources.getDisplayMetrics());
+
+        android.content.Intent intent = new android.content.Intent(this, MainActivity.class);
+        intent.setFlags(android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP | android.content.Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish(); // el cambio tiene efecto
     }
 
     /**

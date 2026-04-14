@@ -17,10 +17,7 @@ import mx.unam.fc.icat.focusmony.R;
 import mx.unam.fc.icat.focusmony.model.Session;
 
 /**
- * Adaptador para gestionar y reciclar las vistas del historial de sesiones.
- * Extiende de RecyclerView.Adapter parametrizado con nuestro ViewHolder específico
- * @author <a href="mailto:monmm@ciencias.unam.mx" > Mónica Miranda Mijangos </a> - @monmm
- * @version 1.2, mar 2026 (esqueleto para alumnos)
+ * @author <a href= joshuahurtado@ciencias.unam.mx>  Joshua Abel Hurtado Aponte - @JoshuaJAHA</a>
  */
 public class SessionHistoryAdapter extends RecyclerView.Adapter<SessionHistoryAdapter.SessionViewHolder> {
 
@@ -92,17 +89,18 @@ public class SessionHistoryAdapter extends RecyclerView.Adapter<SessionHistoryAd
         holder.tvSessionDate.setText(session.getDate());
         holder.tvSessionTime.setText(session.getStartTime());
         // Concatenamos la unidad de tiempo (min) al valor numérico.
-        holder.tvSessionDuration.setText(session.getDuration() + " min");
+        String durationText = session.getDuration() + " min";
+        holder.tvSessionDuration.setText(durationText);
 
         // Lógica de retroalimentación visual basada en el estado de la sesión.
         if (session.isCompleted()) {
             // Caso: Sesión terminada exitosamente (Estilo TV Girl - Fondo Rosa, Letras Azules)
-            holder.chipStatus.setText("✓ Completada");
+            holder.chipStatus.setText(RESOURCES.getString(R.string.status_completed));
             holder.chipStatus.setChipBackgroundColorResource(R.color.color_primary);
             holder.chipStatus.setTextColor(RESOURCES.getColor(R.color.color_secondary, null));
         } else {
             // Caso: Sesión interrumpida (Estilo TV Girl invertido - Fondo Azul, Letras Rosas)
-            holder.chipStatus.setText("✕ Interrumpida");
+            holder.chipStatus.setText(RESOURCES.getString(R.string.status_interrupted));
             holder.chipStatus.setChipBackgroundColorResource(R.color.color_secondary);
             holder.chipStatus.setTextColor(RESOURCES.getColor(R.color.color_primary, null));
         }

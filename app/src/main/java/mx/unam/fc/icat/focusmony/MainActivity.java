@@ -43,12 +43,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int SESSIONS_BEFORE_REST = 4;
 
     //frases motivacionales
-    private final String[] frasesMotivacionales = {
-            "Toma un respiro... te lo ganaste",
-            "Desconecta un momento, tu cerebro lo necesita",
-            "Relaja las piernas y toma agua",
-            "Buen trabajo, pon algo de música y relájate"
-    };
+    private String[] frasesMotivacionales;
 
     private ChipGroup chipGroupMode;
     private Chip chipFocus, chipBreak, chipRest;
@@ -66,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
     private SessionManager sessionManager;
 
     private android.widget.ImageButton btnStats;
+    private android.widget.ImageButton btnSettings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +74,9 @@ public class MainActivity extends AppCompatActivity {
         //inicializamos la conexión a la base de datos
         sessionManager = new SessionManager(this);
 
+        // Cargamos el arreglo de frases desde el diccionario
+        frasesMotivacionales = getResources().getStringArray(R.array.motivational_quotes);
+
         //recupera los datos si se gira la pantalla
         if (savedInstanceState != null) {
             timeLeftMillis = savedInstanceState.getLong("timeLeft");
@@ -88,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
             //si estaba corriendo lo pausamos al girar
             if (timerState == TimerState.RUNNING || timerState == TimerState.PAUSED) {
                 timerState = TimerState.PAUSED;
-                btnStartStop.setText("Reanudar");
+                btnStartStop.setText(getString(R.string.btn_resume));
             }
         }
 
@@ -126,6 +125,7 @@ public class MainActivity extends AppCompatActivity {
         btnSkip = findViewById(R.id.btnSkip);
         tvMotivationalQuote = findViewById(R.id.tvMotivationalQuote);
         btnStats = findViewById(R.id.btnStats);
+        btnSettings = findViewById(R.id.btnSettings);
     }
 
     private void setupClickListeners() {
@@ -147,6 +147,12 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+        //Navegación a la pantalla de Ajustes
+        btnSettings.setOnClickListener(v -> {
+            android.content.Intent intent = new android.content.Intent(MainActivity.this, mx.unam.fc.icat.focusmony.view.PreferencesActivity.class);
+            startActivity(intent);
+        });
+
         //navegación por chips
         View.OnClickListener chipClickListener = v -> {
             SessionMode targetMode;
@@ -156,16 +162,16 @@ public class MainActivity extends AppCompatActivity {
 
             if (currentMode != targetMode) {
                 new AlertDialog.Builder(this)
-                        .setTitle("Cambiar de modo")
-                        .setMessage("¿Seguro que quieres cambiar de modo? El temporizador se reiniciará")
-                        .setPositiveButton("Sí", (dialog, which) -> {
+                        .setTitle(getString(R.string.dialog_mode_title))
+                        .setMessage(getString(R.string.dialog_mode_message))
+                        .setPositiveButton(getString(R.string.dialog_yes), (dialog, which) -> {
                             cancelTimer();
                             currentMode = targetMode;
                             timerState = TimerState.IDLE;
                             resetModeTime();
-                            btnStartStop.setText("Comenzar");
+                            btnStartStop.setText(getString(R.string.btn_start));
                         })
-                        .setNegativeButton("Cancelar", (dialog, which) -> {
+                        .setNegativeButton(getString(R.string.dialog_cancel), (dialog, which) -> {
                             selectChipForMode(currentMode); //regresa la selección al actual
                         })
                         .show();
@@ -184,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
         cancelTimer();
 
         timerState = TimerState.RUNNING;
-        btnStartStop.setText("Pausar");
+        btnStartStop.setText(getString(R.string.btn_pause));
 
         countDownTimer = new CountDownTimer(timeLeftMillis, 1000) {
             @Override
@@ -204,7 +210,7 @@ public class MainActivity extends AppCompatActivity {
     private void pauseTimer() {
         cancelTimer();
         timerState = TimerState.PAUSED;
-        btnStartStop.setText("Reanudar");
+        btnStartStop.setText(getString(R.string.btn_resume));
     }
 
     private void cancelTimer() {
@@ -219,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
         cancelTimer();
         timerState = TimerState.IDLE;
         resetModeTime();
-        btnStartStop.setText("Comenzar");
+        btnStartStop.setText(getString(R.string.btn_start));
     }
 
     //cancelar el tiempo y forzar el fin, para saltar al siguiente
@@ -245,23 +251,23 @@ public class MainActivity extends AppCompatActivity {
             if (focusSessionsCompleted >= SESSIONS_BEFORE_REST) {
                 focusSessionsCompleted = 0;
                 currentMode = SessionMode.REST;
-                tvSessionState.setText("Modo: Pausa Larga");
+                tvSessionState.setText(getString(R.string.mode_long_break));
 
                 //limpiamos los puntitos porque ya empezamos un ciclo nuevo
                 sessionDotsContainer.removeAllViews();
             } else {
                 currentMode = SessionMode.BREAK;
-                tvSessionState.setText("Modo: Descanso");
+                tvSessionState.setText(getString(R.string.mode_break));
             }
         } else {
             currentMode = SessionMode.FOCUS;
-            tvSessionState.setText("Modo: Enfoque");
+            tvSessionState.setText(getString(R.string.mode_focus));
         }
 
-        tvSessionsCompleted.setText("Sesiones completadas: " + focusSessionsCompleted + "/" + SESSIONS_BEFORE_REST);
+        tvSessionsCompleted.setText(getString(R.string.sessionsCount, focusSessionsCompleted));
 
         //mensaje al terminar cada sesion
-        Toast.makeText(this, "Sesión terminada", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.toast_session_finished), Toast.LENGTH_SHORT).show();
 
         //vibracion simple
         Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
@@ -270,7 +276,7 @@ public class MainActivity extends AppCompatActivity {
             v.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
         }
         resetModeTime();
-        btnStartStop.setText("Comenzar");
+        btnStartStop.setText(getString(R.string.btn_start));
     }
 
     // método que empaqueta y envía los datos a la BD
@@ -287,13 +293,13 @@ public class MainActivity extends AppCompatActivity {
         int duration;
 
         if (currentMode == SessionMode.FOCUS) {
-            type = "Enfoque";
+            type = getString(R.string.mode_focus);
             duration = (int) (FOCUS_DURATION_MS / 60000);
         } else if (currentMode == SessionMode.BREAK) {
-            type = "Descanso Corto";
+            type = getString(R.string.mode_break);
             duration = (int) (BREAK_DURATION_MS / 60000);
         } else {
-            type = "Descanso Largo";
+            type = getString(R.string.mode_long_break);
             duration = (int) (REST_DURATION_MS / 60000);
         }
 
@@ -304,9 +310,9 @@ public class MainActivity extends AppCompatActivity {
     //crear y agregar el puntito dinámicamente
     private void addDot() {
         View dot = new View(this);
-        int dotSize = (int) (10 * getResources().getDisplayMetrics().density);
+        int dotSize = (int) getResources().getDimension(R.dimen.spacing_sm);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(dotSize, dotSize);
-        params.setMarginEnd((int) (8 * getResources().getDisplayMetrics().density));
+        params.setMarginEnd((int) getResources().getDimension(R.dimen.spacing_xs));
         dot.setLayoutParams(params);
         dot.setBackground(ContextCompat.getDrawable(this, R.drawable.dot_session_completed));
         sessionDotsContainer.addView(dot);
@@ -315,7 +321,7 @@ public class MainActivity extends AppCompatActivity {
     private void resetModeTime() {
         if (currentMode == SessionMode.FOCUS) {
             timeLeftMillis = FOCUS_DURATION_MS;
-            tvMotivationalQuote.setText("¡Sigue así!");
+            tvMotivationalQuote.setText(getString(R.string.quote_keep_going));
         } else if (currentMode == SessionMode.BREAK) {
             timeLeftMillis = BREAK_DURATION_MS;
             ponerFraseAleatoria();
@@ -328,15 +334,17 @@ public class MainActivity extends AppCompatActivity {
 
     //método para poner la frase aleatoria
     private void ponerFraseAleatoria() {
-        int randomNum = new Random().nextInt(frasesMotivacionales.length);
-        tvMotivationalQuote.setText(frasesMotivacionales[randomNum]);
+        if (frasesMotivacionales != null && frasesMotivacionales.length > 0) {
+            int randomNum = new Random().nextInt(frasesMotivacionales.length);
+            tvMotivationalQuote.setText(frasesMotivacionales[randomNum]);
+        }
     }
 
     private void updateTimerDisplay(long millis) {
         selectChipForMode(currentMode);
         int minutes = (int) (millis / 1000) / 60;
         int seconds = (int) (millis / 1000) % 60;
-        tvTimerDisplay.setText(String.format("%02d:%02d", minutes, seconds));
+        tvTimerDisplay.setText(String.format(java.util.Locale.getDefault(), "%02d:%02d", minutes, seconds));
     }
 
     private void selectChipForMode(SessionMode mode) {
@@ -359,7 +367,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void highlightChip(Chip activeChip) {
-        float density = getResources().getDisplayMetrics().density;
         Chip[] allChips = {chipFocus, chipBreak, chipRest};
 
         for (Chip chip : allChips) {
@@ -367,8 +374,24 @@ public class MainActivity extends AppCompatActivity {
         }
 
         //pone el borde al que está activo
-        activeChip.setChipStrokeWidth(2 * density);
+        activeChip.setChipStrokeWidth(getResources().getDimension(R.dimen.chip_stroke_width));
         int colorAccent = ContextCompat.getColor(this, R.color.color_border_accent);
         activeChip.setChipStrokeColor(ColorStateList.valueOf(colorAccent));
+    }
+
+    //cambio de idioma
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        // Obtenemos las preferencias
+        android.content.SharedPreferences prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(newBase);
+
+        String lang = prefs.getString("mx.unam.icat.esie.focusmony.LANG_PREFERENCE_KEY", "es");
+
+        java.util.Locale locale = new java.util.Locale(lang);
+        java.util.Locale.setDefault(locale);
+        android.content.res.Configuration config = new android.content.res.Configuration();
+        config.setLocale(locale);
+
+        super.attachBaseContext(newBase.createConfigurationContext(config));
     }
 }

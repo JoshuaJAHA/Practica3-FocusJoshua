@@ -22,4 +22,7 @@
     <dimen name="chip_spacing"> 8dp </dimen>
     <dimen name="caption_text_size">11sp</dimen>
 
+    <dimen name="dot_size">80dp</dimen>
+    <dimen name="chip_stroke_width">2dp</dimen>
+
 </resources>

@@ -19,7 +19,7 @@
         android:id="@+id/chipGroupFilter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/spacing_md"
         app:singleSelection="true"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -30,29 +30,29 @@
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Hoy" />
+            android:text="@string/history_filter_today" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chipWeek"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Esta semana" />
+            android:text="@string/history_filter_week" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chipAll"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Todas" />
+            android:text="@string/history_filter_all" />
     </com.google.android.material.chip.ChipGroup>
 
     <TextView
         android:id="@+id/tvResultCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginTop="@dimen/spacing_sm"
+        android:layout_marginEnd="@dimen/spacing_md"
         android:textColor="@color/white"
         android:textStyle="bold"
         tools:text="7 sesiones"
@@ -73,17 +73,17 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Aún no hay sesiones"
+            android:text="@string/history_empty_title"
             android:textColor="@color/white"
-            android:textSize="18sp"/>
+            android:textSize="@dimen/app_title_size"/>
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewHistory"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="8dp"
-        android:padding="8dp"
+        android:layout_marginTop="@dimen/spacing_sm"
+        android:padding="@dimen/spacing_sm"
         android:clipToPadding="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvResultCount" />

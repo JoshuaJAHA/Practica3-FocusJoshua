@@ -6,7 +6,6 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -100,7 +99,7 @@ public class SessionHistoryActivity extends AppCompatActivity {
 
             // Actualizamos el texto que dice "X sesiones"
             int total = filteredSessions.size();
-            tvResultCount.setText(total + (total == 1 ? " sesión" : " sesiones"));
+            tvResultCount.setText(getString(R.string.session_count, total));
 
             // Si el filtro da 0 resultados, mostramos el letrero de "Aún no hay sesiones"
             layoutEmpty.setVisibility(total == 0 ? View.VISIBLE : View.GONE);
@@ -117,7 +116,7 @@ public class SessionHistoryActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle("Historial de Sesiones");
+            getSupportActionBar().setTitle(getString(R.string.title_history));
         }
     }
 
@@ -151,7 +150,7 @@ public class SessionHistoryActivity extends AppCompatActivity {
 
         // TODO: Investigar cómo usar Plurals en strings.xml para manejar "1 sesión" vs "2 sesiones".
         int total = sessions != null ? sessions.size() : 0;
-        tvResultCount.setText(total + (total == 1 ? " sesión" : " sesiones"));
+        tvResultCount.setText(getString(R.string.session_count, total));
     }
 
     @Override

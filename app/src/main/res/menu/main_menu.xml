@@ -6,7 +6,7 @@
         android:id="@+id/action_history"
         android:icon="@android:drawable/ic_menu_recent_history"
         android:title="@string/btn_history"
-        android:contentDescription=""
+        android:contentDescription="@string/btn_history"
         app:showAsAction="ifRoom"
         app:tint="@color/color_secondary" />
 
@@ -14,7 +14,7 @@
         android:id="@+id/action_preferences"
         android:icon="@android:drawable/ic_menu_preferences"
         android:title="@string/btn_preferences"
-        android:contentDescription=""
+        android:contentDescription="@string/btn_preferences"
         app:showAsAction="ifRoom"
         app:tint="@color/color_secondary" />
 </menu>

@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="theme_options">
-        <item>Claro</item>
-        <item>Oscuro</item>
+        <item>@string/theme_name_light</item>
+        <item>@string/theme_name_dark</item>
     </string-array>
+
     <string-array name="theme_values">
         <item>@string/theme_light_id</item>
         <item>@string/theme_dark_id</item>
@@ -13,6 +14,7 @@
         <item>Español</item>
         <item>English</item>
     </string-array>
+
     <string-array name="lang_values">
         <item>es</item>
         <item>en</item>

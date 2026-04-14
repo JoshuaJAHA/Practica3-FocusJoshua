@@ -14,6 +14,13 @@
 
     <string name="quote"> "La concentración es la raíz de todas las capacidades superiores del hombre." — Bruce Lee </string>
 
+    <string-array name="motivational_quotes">
+        <item>Toma un respiro... te lo ganaste</item>
+        <item>Desconecta un momento, tu cerebro lo necesita</item>
+        <item>Relaja las piernas y toma agua</item>
+        <item>Buen trabajo, pon algo de música y relájate</item>
+    </string-array>
+
     <string name="btn_history"> Historial </string>
     <string name="btn_preferences"> Preferencias </string>
 
@@ -29,4 +36,27 @@
 
     <string name="session_count"> %1$d sesiones </string>
     <string name="title_preferences"> Preferencias </string>
+
+    <string name="btn_reset">Reiniciar</string>
+    <string name="btn_skip">Saltar</string>
+
+    <string name="theme_name_light">Claro</string>
+    <string name="theme_name_dark">Oscuro</string>
+
+    <string name="pref_category_settings">Ajustes</string>
+    <string name="pref_theme_title">Tema de la aplicación</string>
+    <string name="pref_theme_summary">Elige entre modo claro u oscuro</string>
+
+    <string name="pref_category_language">Idioma</string>
+    <string name="pref_lang_title">Idioma preferido</string>
+    <string name="pref_lang_summary">Selecciona el lenguaje de la interfaz</string>
+    <string name="dialog_mode_title">Cambiar de modo</string>
+    <string name="dialog_mode_message">¿Seguro que quieres cambiar de modo? El temporizador se reiniciará</string>
+    <string name="dialog_yes">Sí</string>
+    <string name="dialog_cancel">Cancelar</string>
+    <string name="status_completed">✓ Completada</string>
+    <string name="status_interrupted">✕ Interrumpida</string>
+    <string name="toast_session_finished">Sesión terminada</string>
+    <string name="quote_keep_going">¡Sigue así!</string>
+
 </resources>
