@@ -5,7 +5,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
-import androidx.preference.PreferenceManager; // Asegúrate de tener la dependencia
+import androidx.preference.PreferenceManager;
 
 import mx.unam.fc.icat.focusmony.MainActivity;
 import mx.unam.fc.icat.focusmony.R;
@@ -65,7 +65,7 @@ public class PreferencesActivity extends AppCompatActivity
         if (key.equals(getString(R.string.lang_preference_key))) {
             String lang = sharedPreferences.getString(key, "es");
             applyLanguage(lang);
-            recreate();
+            // No llamamos a recreate() aquí directamente para evitar bucles con startActivity
         }
 
         // Caso Tema (Oscuro / Claro / Sistema)
@@ -86,10 +86,11 @@ public class PreferencesActivity extends AppCompatActivity
         config.setLocale(locale);
         resources.updateConfiguration(config, resources.getDisplayMetrics());
 
+        // Reiniciamos la app desde el inicio para que el cambio sea global
         android.content.Intent intent = new android.content.Intent(this, MainActivity.class);
         intent.setFlags(android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP | android.content.Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
-        finish(); // el cambio tiene efecto
+        finish(); // El cambio tiene efecto y cerramos la actividad actual
     }
 
     /**
